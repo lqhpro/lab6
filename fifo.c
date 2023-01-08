@@ -2,6 +2,96 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+void START_MENU()
+{
+    printf(" _________________________________________\n");
+    printf("|  -----Page Replacement Algorithm-----   |\n");
+    printf("|      1. Chuoi tham chieu mac dinh       |\n");
+    printf("|      2. Nhap chuoi tham chieu bang tay  |\n");
+    printf("|_________________________________________|\n");
+}
+
+void FRAME_INSERT_MENU()
+{
+    printf(" _________________________________________\n");
+    printf("|  -----Page Replacement Algorithm-----   |\n");
+    printf("|          Nhap so khung trang            |\n");
+    printf("|_________________________________________|\n");
+}
+
+void OPTIONS_MENU()
+{
+    printf(" _________________________________________\n");
+    printf("|  -----Page Replacement Algorithm-----   |\n");
+    printf("|          1. Giai thuat FIFO             |\n");
+    printf("|          2. Giai thuat OPT (Optimal)    |\n");
+    printf("|          3. Giai thuat LRU              |\n");
+    printf("|_________________________________________|\n");
+}
+
+void defA_to_A(int defA[], int A[])
+{
+    int i;
+    for (i = 0; i < 12; i++)
+    {
+        A[i] = defA[i];
+    }
+}
+
+void A_Insert(int A[], int n)
+{
+    printf("Chuoi tham chieu: ");
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &A[i]);
+    }
+}
+
+void FIFO(int A[], int frames[], int NumOf_frames, int n)
+{
+    printf(" _____________________________________\n");
+    printf("|---FIFO Page Replacement Algorithm---|\n");
+    printf("|_____________________________________|\n");
+    int i, j, k, available, count = 0;
+
+	for(i = 0; i < NumOf_frames; i++)
+        frames[i] = -1; // Giả sử ban đầu các frame trống
+    j = 0;
+    printf("\t|Chuoi|\t|Khung trang");
+    for(k = 0; k < NumOf_frames - 1; k++)
+		printf("\t");
+	printf("|\n");
+	for(i = 1; i <= n; i++)
+    {
+        printf("\t|  %d  |\t", A[i]);
+        available = 0; // trang không có sẵn
+        for(k = 0; k < NumOf_frames; k++)
+            if(frames[k] == A[i]) // kiểm tra trang có sẵn
+                available = 1; // trang có sẵn
+        if (available == 0) // thay thế trang nếu không có sẵn
+        {
+            frames[j] = A[i];
+            j = (j + 1) % NumOf_frames;
+            count++;
+            printf("|");
+            for(k = 0; k < NumOf_frames; k++)
+                printf("%d\t", frames[k]);
+            printf("| *"); // Dấu hiệu nhận biết xảy ra lỗi trang
+        }
+        else
+        {
+            printf("|");
+            for(k = 0; k < NumOf_frames; k++)
+                printf("%d\t", frames[k]);
+            printf("|");
+        }
+        printf("\n");
+	}
+    printf("So trang loi la: %d\n", count);
+}
+
 int main()
 {
     int default_A[] = {2, 1, 5, 2, 2, 1, 1, 7, 0, 0, 7}; // default reference string
@@ -76,111 +166,4 @@ int main()
     }
 
     return 0;
-}
-
-void START_MENU()
-{
-    printf(" _________________________________________\n");
-    printf("|  -----Page Replacement Algorithm-----   |\n");
-    printf("|      1. Chuoi tham chieu mac dinh       |\n");
-    printf("|      2. Nhap chuoi tham chieu bang tay  |\n");
-    printf("|_________________________________________|\n");
-}
-
-void FRAME_INSERT_MENU()
-{
-    printf(" _________________________________________\n");
-    printf("|  -----Page Replacement Algorithm-----   |\n");
-    printf("|          Nhap so khung trang            |\n");
-    printf("|_________________________________________|\n");
-}
-
-void OPTIONS_MENU()
-{
-    printf(" _________________________________________\n");
-    printf("|  -----Page Replacement Algorithm-----   |\n");
-    printf("|          1. Giai thuat FIFO             |\n");
-    printf("|          2. Giai thuat OPT (Optimal)    |\n");
-    printf("|          3. Giai thuat LRU              |\n");
-    printf("|_________________________________________|\n");
-}
-
-void defA_to_A(int defA[], int A[])
-{
-    int i;
-    for (i = 0; i < 12; i++)
-    {
-        A[i] = defA[i];
-    }
-}
-
-void A_Insert(int A[], int n)
-{
-    printf("Chuoi tham chieu: ");
-    int i;
-    for (i = 0; i < n; i++)
-    {
-        scanf("%d", &A[i]);
-    }
-}
-
-void FIFO(int A[], int frames[], int NumOf_frames, int n)
-{
-    char faults[100];
-    int print[10][100];
-    printf(" _____________________________________\n");
-    printf("|---FIFO Page Replacement Algorithm---|\n");
-    printf("|_____________________________________|\n");
-    int i, j, k, available, count = 0;
-    for (int i = 0; i < n; i++)
-        faults[i] = ' ';
-    for (i = 0; i < NumOf_frames; i++)
-        frames[i] = -1; // Giả sử ban đầu các frame trống
-    j = 0;
-
-    for (i = 0; i < n; i++)
-    {
-        printf("%d ", A[i]);
-        available = 0; // trang không có sẵn
-        for (k = 0; k < NumOf_frames; k++)
-        {
-            if (frames[k] == A[i]) // kiểm tra trang có sẵn
-                available = 1;     // trang có sẵn
-        }
-        if (available == 0) // thay thế trang nếu không có sẵn
-        {
-            frames[j] = A[i];
-            j = (j + 1) % NumOf_frames;
-            count++;
-            for (k = 0; k < NumOf_frames; k++)
-            {
-                print[k][i] = frames[k];
-            }
-            faults[i] = '*';
-        }
-        else
-        {
-            for (k = 0; k < NumOf_frames; k++)
-            {
-                print[k][i] = frames[k];
-            }
-        }
-    }
-    printf("\n");
-    for (int u = 0; u < NumOf_frames; u++)
-    {
-        for (int y = 0; y < n; y++)
-        {
-            if (print[u][y] == -1)
-            {
-                printf("  ");
-                continue;
-            }
-            printf("%d ", print[u][y]);
-        }
-        printf("\n");
-    }
-    for (int i = 0; i < n; i++)
-        printf("%c ", faults[i]);
-    printf("\nSo trang loi la: %d\n", count);
 }
